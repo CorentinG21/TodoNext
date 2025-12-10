@@ -35,6 +35,8 @@
     "@types/react-dom": "19.2.3",
     "eslint": "9.39.1",
     "eslint-config-next": "16.0.8",
+    "lefthook": "2.0.9",
+    "prettier": "3.7.4",
     "prisma": "^7.1.0",
     "tailwindcss": "4.1.17",
     "tsx": "^4.21.0",
