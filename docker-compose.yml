@@ -1,0 +1,16 @@
+services:
+    postgres:
+        image: postgres:16.1
+        env_file:
+            - .env
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_DB: "todonext"
+            POSTGRES_USER: "todonext"
+            POSTGRES_PASSWORD: "todonext"
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U todonext"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
