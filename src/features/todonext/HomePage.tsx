@@ -1,7 +1,5 @@
-import { Item, ItemActions, ItemContent, ItemTitle } from "@/components/ui/item";
-import { prisma } from "@/lib/prisma"
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
+import { prisma } from "@/lib/prisma";
+import { TodoItem } from "@/features/todonext/TodoItem";
 
 export const HomePage = async () => {
     const todos = await prisma.todo.findMany();
@@ -14,47 +12,16 @@ export const HomePage = async () => {
                         TodoLIST
                     </h1>
                     <p className="text-gray-500 text-lg">
-                        {todos.length} tâche{todos.length > 1 ? 's' : ''} en cours
+                        {todos.length} tâche{todos.length > 1 ? "s" : ""} en cours
                     </p>
                 </div>
 
-                {/* Liste des todos */}
                 <div className="space-y-4">
-                    {todos.map(todo => (
-                        <Item
-                            key={todo.id}
-                            variant="outline"
-                            className="group bg-white hover:bg-gray-50 transition-all duration-200 rounded-xl shadow-sm hover:shadow-md border border-gray-200  hover:border-gray-300 p-5"
-                        >
-                            <ItemActions>
-                                <Checkbox
-                                    checked={todo.status === "CHECKED"}
-                                    className="h-5 w-5 rounded-lg border-gray-300 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500 transition-colors duration-200"
-                                />
-                            </ItemActions>
-
-                            <ItemContent className="items-center flex-row">
-                                <ItemTitle className={`mr-auto text-lg font-medium ${todo.status === "CHECKED" ? 'line-through text-gray-400' : 'text-gray-700'}`}
-                                >
-                                    {todo.label}
-                                </ItemTitle>
-                                <Badge
-                                    variant={todo.priority === "HIGH" ? "destructive" : todo.priority === "MEDIUM" ? "outline" : "secondary"}
-                                    className={`h-6 min-w-20 justify-center text-xs font-medium 
-                                                ${todo.priority === "HIGH"
-                                            ? 'bg-red-100 text-red-800 border-red-200'
-                                            : todo.priority === "MEDIUM"
-                                                ? 'bg-amber-100 text-amber-800 border-amber-200'
-                                                : 'bg-green-100 text-green-800 border-green-200'
-                                        }`}
-                                >
-                                    {todo.priority === "HIGH" ? "Haute" : todo.priority === "MEDIUM" ? "Moyenne" : "Basse"}
-                                </Badge>
-                            </ItemContent>
-                        </Item>
+                    {todos.map((todo) => (
+                        <TodoItem key={todo.id} todo={todo} />
                     ))}
                 </div>
-            </div >
-        </div >
-    )
-}
+            </div>
+        </div>
+    );
+};
