@@ -3,16 +3,37 @@
 import { Spinner } from '@/components/ui/spinner';
 import { TodoItem } from '@/features/todonext/TodoItem';
 import { Todo } from '@/generated/prisma/client';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { error } from 'console';
 
 export const HomePage = () => {
-    const { data, isLoading, error } = useQuery({
+    const { data, isLoading, error, refetch } = useQuery({
         queryKey: ['todos'],
         queryFn: async () => {
             const result = await fetch('/api/todo');
             if (!result.ok) throw new Error('Cannot get todos');
             return (await result.json()) as { data: Array<Todo> };
+        },
+    });
+
+    const toggleMutation = useMutation({
+        mutationFn: async ({
+            id,
+            checked,
+        }: {
+            id: string;
+            checked: boolean;
+        }) => {
+            await fetch(`/api/todo/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    status: checked ? 'CHECKED' : 'NOT_CHECKED',
+                }),
+            });
+        },
+        onSuccess: () => {
+            refetch();
         },
     });
 
@@ -49,7 +70,16 @@ export const HomePage = () => {
                 {!isLoading && !error && (
                     <div className="space-y-4">
                         {todos.map((todo) => (
-                            <TodoItem key={todo.id} todo={todo} />
+                            <TodoItem
+                                key={todo.id}
+                                todo={todo}
+                                onToggle={(checked) =>
+                                    toggleMutation.mutate({
+                                        id: todo.id,
+                                        checked,
+                                    })
+                                }
+                            />
                         ))}
                     </div>
                 )}
