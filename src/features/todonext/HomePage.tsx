@@ -24,42 +24,33 @@ export const HomePage = async () => {
                         <Item
                             key={todo.id}
                             variant="outline"
-                            className="group bg-white hover:bg-gray-50 transition-all duration-200 
-                                     rounded-xl shadow-sm hover:shadow-md border border-gray-200 
-                                     hover:border-gray-300 p-5"
+                            className="group bg-white hover:bg-gray-50 transition-all duration-200 rounded-xl shadow-sm hover:shadow-md border border-gray-200  hover:border-gray-300 p-5"
                         >
-                            <div className="flex items-center gap-4">
-                                <ItemActions>
-                                    <Checkbox
-                                        checked={todo.status === "CHECKED"}
-                                        className="h-5 w-5 rounded-lg border-gray-300 
-                                                 data-[state=checked]:bg-blue-500 
-                                                 data-[state=checked]:border-blue-500
-                                                 transition-colors duration-200"
-                                    />
-                                </ItemActions>
+                            <ItemActions>
+                                <Checkbox
+                                    checked={todo.status === "CHECKED"}
+                                    className="h-5 w-5 rounded-lg border-gray-300 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500 transition-colors duration-200"
+                                />
+                            </ItemActions>
 
-                                <ItemContent className="flex-1">
-                                    <div className="flex items-center">
-                                        <ItemTitle className={`text-lg font-medium ${todo.status === "CHECKED" ? 'line-through text-gray-400' : 'text-gray-700'}`}
-                                        >
-                                            {todo.label}
-                                        </ItemTitle>
-                                        <Badge
-                                            variant={todo.priority === "HIGH" ? "destructive" : todo.priority === "MEDIUM" ? "outline" : "secondary"}
-                                            className={`h-6 min-w-20 justify-center text-xs font-medium 
+                            <ItemContent className="items-center flex-row">
+                                <ItemTitle className={`mr-auto text-lg font-medium ${todo.status === "CHECKED" ? 'line-through text-gray-400' : 'text-gray-700'}`}
+                                >
+                                    {todo.label}
+                                </ItemTitle>
+                                <Badge
+                                    variant={todo.priority === "HIGH" ? "destructive" : todo.priority === "MEDIUM" ? "outline" : "secondary"}
+                                    className={`h-6 min-w-20 justify-center text-xs font-medium 
                                                 ${todo.priority === "HIGH"
-                                                    ? 'bg-red-100 text-red-800 border-red-200'
-                                                    : todo.priority === "MEDIUM"
-                                                        ? 'bg-amber-100 text-amber-800 border-amber-200'
-                                                        : 'bg-green-100 text-green-800 border-green-200'
-                                                }`}
-                                        >
-                                            {todo.priority === "HIGH" ? "Haute" : todo.priority === "MEDIUM" ? "Moyenne" : "Basse"}
-                                        </Badge>
-                                    </div>
-                                </ItemContent>
-                            </div>
+                                            ? 'bg-red-100 text-red-800 border-red-200'
+                                            : todo.priority === "MEDIUM"
+                                                ? 'bg-amber-100 text-amber-800 border-amber-200'
+                                                : 'bg-green-100 text-green-800 border-green-200'
+                                        }`}
+                                >
+                                    {todo.priority === "HIGH" ? "Haute" : todo.priority === "MEDIUM" ? "Moyenne" : "Basse"}
+                                </Badge>
+                            </ItemContent>
                         </Item>
                     ))}
                 </div>
