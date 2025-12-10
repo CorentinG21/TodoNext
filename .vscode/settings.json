@@ -1,14 +1,15 @@
 {
-  "sqltools.connections": [
-    {
-      "ssh": "Disabled",
-      "previewLimit": 50,
-      "server": "localhost",
-      "port": 5432,
-      "driver": "PostgreSQL",
-      "name": "Local todonext",
-      "database": "todonext",
-      "username": "todonext"
-    }
-  ]
+    "sqltools.connections": [
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "Local todonext",
+            "database": "todonext",
+            "username": "todonext"
+        }
+    ],
+    "typescript.tsdk": "node_modules\\typescript\\lib"
 }
