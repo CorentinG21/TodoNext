@@ -1,9 +1,5 @@
-import Image from "next/image";
+import { HomePage } from "@/features/todonext/HomePage";
 
 export default function Home() {
-  return (
-    <div>
-      
-    </div>
-  );
+  return <HomePage />
 }
