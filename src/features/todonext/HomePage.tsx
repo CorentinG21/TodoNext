@@ -37,19 +37,6 @@ export const HomePage = () => {
         },
     });
 
-    const createMutation = useMutation({
-        mutationFn: async ({ newLabel }: { newLabel: string }) => {
-            await fetch('/api/todo', {
-                method: 'POST',
-                headers: { 'Contant-Type': 'application/json' },
-                body: JSON.stringify({ label: newLabel }),
-            });
-        },
-        onSuccess: () => {
-            refetch();
-        },
-    });
-
     const todos = data?.data || [];
 
     const nbNotChecked = todos.filter(
@@ -57,7 +44,7 @@ export const HomePage = () => {
     ).length;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
+        <div className="min-h-screen from-gray-50 to-gray-100 p-4 md:p-8">
             <div className="max-w-3xl mx-auto">
                 <div className="mb-10 md:mb-12 text-center">
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-3">
@@ -82,11 +69,7 @@ export const HomePage = () => {
 
                 {!isLoading && !error && (
                     <>
-                        <CreateTodoForm
-                            onCreate={(label) =>
-                                createMutation.mutate({ newLabel: label })
-                            }
-                        />
+                        <CreateTodoForm />
                         <div className="space-y-4">
                             {todos.map((todo) => (
                                 <TodoItem
