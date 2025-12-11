@@ -6,8 +6,8 @@
   "scripts": {
     "postinstall": "npx prisma generate",
     "dev": "next dev",
+    "prebuild": "npx prisma migrate deploy",
     "build": "next build",
-    "prestart": "npx prisma migrate deploy",
     "start": "next start",
     "lint": "eslint"
   },
