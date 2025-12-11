@@ -11,16 +11,25 @@ export async function GET() {
 export async function POST(req: NextRequest) {
     const body = await req.json();
 
-    const { label, priority } = body;
+    const { label, priority, deadline } = body;
 
     if (!label.trim()) {
         return new Response('Le Label est requis !!!!!', { status: 400 });
+    }
+
+    let deadlineIso: string | null = null;
+    if (deadline) {
+        const date = new Date(deadline);
+        if (!isNaN(date.getTime())) {
+            deadlineIso = date.toISOString();
+        }
     }
 
     const todo = await prisma.todo.create({
         data: {
             label,
             priority: priority || 'LOW',
+            deadline: deadlineIso,
         },
     });
     return Response.json({ data: todo });

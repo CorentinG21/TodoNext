@@ -21,10 +21,18 @@ export type TodoItemProps = {
 
 export const TodoItem = ({ todo, onToggle, ...rest }: TodoItemProps) => {
     const datecreate = dayjs(todo.createdAt).format('DD/MM/YYYY');
+    const deadline = todo.deadline ? dayjs(todo.deadline) : null;
+    const deadlineText = deadline ? deadline.format('DD/MM/YYYY') : null;
+    const datedepasse = deadline ? dayjs().isAfter(deadline) : false;
+
     return (
         <Item
             {...rest}
-            className="group bg-white hover:bg-gray-50 transition-all duration-200 rounded-xl shadow-sm hover:shadow-md border border-gray-200 hover:border-gray-300 p-5"
+            className={`group bg-white hover:bg-gray-50 transition-all duration-200 rounded-xl shadow-sm hover:shadow-md p-5 border ${
+                datedepasse
+                    ? 'border-red-500 hover:border-red-600'
+                    : 'border-gray-200 hover:border-gray-300'
+            }`}
         >
             <ItemActions>
                 <Checkbox
@@ -48,8 +56,19 @@ export const TodoItem = ({ todo, onToggle, ...rest }: TodoItemProps) => {
                         {todo.label}
                     </ItemTitle>
 
-                    <p className="text-xs text-gray-600 mt-1">
+                    <p className="text-xs text-gray-600 mt-1 flex flex-col sm:flex-row sm:gap-2">
                         Créé le {datecreate}
+                        {deadline && (
+                            <span
+                                className={`${
+                                    datedepasse
+                                        ? 'text-red-600 font-semibold flex items-center gap-1'
+                                        : 'text-gray-600'
+                                }`}
+                            >
+                                {datedepasse && '⚠️'} Deadline: {deadlineText}
+                            </span>
+                        )}
                     </p>
                 </div>
 
