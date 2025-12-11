@@ -1,21 +1,29 @@
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 
 type CreateTodoFormValues = {
     label: string;
+    priority: 'LOW' | 'MEDIUM' | 'HIGH';
 };
 
 export const CreateTodoForm = () => {
     const createMutation = useMutation({
-        mutationFn: async ({ label }: { label: string }) => {
+        mutationFn: async ({ label, priority }: CreateTodoFormValues) => {
             const res = await fetch('/api/todo', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ label }),
+                body: JSON.stringify({ label, priority }),
             });
             if (!res.ok) throw new Error('Erreur lors de la création');
             return res.json();
@@ -38,12 +46,18 @@ export const CreateTodoForm = () => {
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors },
         reset,
-    } = useForm<CreateTodoFormValues>();
+        control,
+    } = useForm<CreateTodoFormValues>({
+        defaultValues: {
+            priority: 'LOW',
+        },
+    });
 
     const onSubmit = (data: CreateTodoFormValues) => {
-        createMutation.mutate({ label: data.label });
+        createMutation.mutate(data);
         reset();
     };
 
@@ -57,7 +71,6 @@ export const CreateTodoForm = () => {
                     type="text"
                     className="w-full"
                     {...register('label', {
-                        // required: 'Le champ est requis',
                         minLength: {
                             value: 3,
                             message:
@@ -69,6 +82,24 @@ export const CreateTodoForm = () => {
                     <p className="text-red-600">{errors.label.message}</p>
                 )}
             </Field>
+
+            <Controller
+                name="priority"
+                control={control}
+                render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger className="w-[150px]">
+                            <SelectValue placeholder="Priorité" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="LOW">Basse</SelectItem>
+                            <SelectItem value="MEDIUM">Moyenne</SelectItem>
+                            <SelectItem value="HIGH">Haute</SelectItem>
+                        </SelectContent>
+                    </Select>
+                )}
+            />
+
             <Button type="submit" variant="outline" size="icon">
                 +
             </Button>

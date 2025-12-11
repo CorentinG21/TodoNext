@@ -11,7 +11,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
     const body = await req.json();
 
-    const { label } = body;
+    const { label, priority } = body;
 
     if (!label.trim()) {
         return new Response('Le Label est requis !!!!!', { status: 400 });
@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
     const todo = await prisma.todo.create({
         data: {
             label,
+            priority: priority || 'LOW',
         },
     });
     return Response.json({ data: todo });
