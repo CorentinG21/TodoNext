@@ -34,11 +34,3 @@ export async function POST(req: NextRequest) {
     });
     return Response.json({ data: todo });
 }
-
-// export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-//     const { id } = await params;
-//     const deleteTodo = await prisma.todo.update({
-//         where: { id },
-//         data: { isDeleted: true },
-//     });
-// }
