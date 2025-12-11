@@ -12,10 +12,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Popover, PopoverTrigger } from '@/components/ui/popover';
-import { PopoverContent } from '@/components/ui/popover';
+import {
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+} from '@/components/ui/popover';
 import { useState } from 'react';
-import { CirclePlus } from 'lucide-react';
+import { Plus } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 
 type CreateTodoFormValues = {
     label: string;
@@ -123,7 +127,7 @@ export const CreateTodoForm = () => {
                             <PopoverTrigger asChild>
                                 <Button
                                     variant="outline"
-                                    className="w-40 justify-between"
+                                    className="w-40 justify-between border-gray-200"
                                 >
                                     {date
                                         ? date.toLocaleDateString()
@@ -145,8 +149,18 @@ export const CreateTodoForm = () => {
                 }}
             />
 
-            <Button type="submit" variant="outline" size="icon">
-                <CirclePlus className="size-6 text-green-600" />
+            <Button
+                type="submit"
+                variant="outline"
+                size="icon"
+                className="border-transparent"
+                disabled={createMutation.isPending}
+            >
+                {createMutation.isPending ? (
+                    <Spinner />
+                ) : (
+                    <Plus className="size-5 text-green-600" />
+                )}
             </Button>
         </form>
     );
