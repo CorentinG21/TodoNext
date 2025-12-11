@@ -3,6 +3,7 @@
 import { Spinner } from '@/components/ui/spinner';
 import { TodoItem } from '@/features/todonext/TodoItem';
 import { Todo } from '@/generated/prisma/client';
+import { CreateTodoForm } from './CreateTodoForm';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 export const HomePage = () => {
@@ -36,18 +37,18 @@ export const HomePage = () => {
         },
     });
 
-    // const createMutation = useMutation({
-    //     mutationFn: async ({newLabel} : { newLabel: string}) => {
-    //         await fetch('/api/todo', {
-    //             method: 'POST',
-    //             headers : { 'Contant-Type' : 'application/json'},
-    //             body: JSON.stringify({ label: newLabel })
-    //         })
-    //     },
-    //     onSuccess: () => {
-    //         refetch();
-    //     }
-    // })
+    const createMutation = useMutation({
+        mutationFn: async ({ newLabel }: { newLabel: string }) => {
+            await fetch('/api/todo', {
+                method: 'POST',
+                headers: { 'Contant-Type': 'application/json' },
+                body: JSON.stringify({ label: newLabel }),
+            });
+        },
+        onSuccess: () => {
+            refetch();
+        },
+    });
 
     const todos = data?.data || [];
 
@@ -80,20 +81,27 @@ export const HomePage = () => {
                 {!isLoading && error && <div>Cannot load todos.</div>}
 
                 {!isLoading && !error && (
-                    <div className="space-y-4">
-                        {todos.map((todo) => (
-                            <TodoItem
-                                key={todo.id}
-                                todo={todo}
-                                onToggle={(checked) =>
-                                    toggleMutation.mutate({
-                                        id: todo.id,
-                                        checked,
-                                    })
-                                }
-                            />
-                        ))}
-                    </div>
+                    <>
+                        <CreateTodoForm
+                            onCreate={(label) =>
+                                createMutation.mutate({ newLabel: label })
+                            }
+                        />
+                        <div className="space-y-4">
+                            {todos.map((todo) => (
+                                <TodoItem
+                                    key={todo.id}
+                                    todo={todo}
+                                    onToggle={(checked) =>
+                                        toggleMutation.mutate({
+                                            id: todo.id,
+                                            checked,
+                                        })
+                                    }
+                                />
+                            ))}
+                        </div>
+                    </>
                 )}
             </div>
         </div>
