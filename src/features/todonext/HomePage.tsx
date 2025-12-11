@@ -36,6 +36,19 @@ export const HomePage = () => {
         },
     });
 
+    // const createMutation = useMutation({
+    //     mutationFn: async ({newLabel} : { newLabel: string}) => {
+    //         await fetch('/api/todo', {
+    //             method: 'POST',
+    //             headers : { 'Contant-Type' : 'application/json'},
+    //             body: JSON.stringify({ label: newLabel })
+    //         })
+    //     },
+    //     onSuccess: () => {
+    //         refetch();
+    //     }
+    // })
+
     const todos = data?.data || [];
 
     const nbNotChecked = todos.filter(
