@@ -30,6 +30,7 @@ model Todo {
   priority  TodoPriority @default(LOW)
   deadline  DateTime?
   label String
+  isDeleted Boolean
   createdAt  DateTime @default(now())
   updatedAt DateTime @updatedAt()
 }

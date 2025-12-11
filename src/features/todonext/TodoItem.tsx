@@ -11,6 +11,8 @@ import { ComponentProps } from 'react';
 import dayjs from 'dayjs';
 
 import 'dayjs/locale/fr';
+import { Button } from '@/components/ui/button';
+import { Trash2 } from 'lucide-react';
 
 dayjs.locale('fr');
 
@@ -95,6 +97,9 @@ export const TodoItem = ({ todo, onToggle, ...rest }: TodoItemProps) => {
                           ? 'Moyenne'
                           : 'Basse'}
                 </Badge>
+                <Button className="bg-transparent hover:bg-red-200 transition-colors">
+                    <Trash2 className="text-red-600 hover:text-red-700" />
+                </Button>
             </ItemContent>
         </Item>
     );
