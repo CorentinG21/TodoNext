@@ -30,7 +30,6 @@ export async function POST(req: NextRequest) {
             label,
             priority: priority || 'LOW',
             deadline: deadlineIso,
-            isDeleted: false,
         },
     });
     return Response.json({ data: todo });
