@@ -4,7 +4,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { TodoItem } from '@/features/todonext/TodoItem';
 import { Todo } from '@/generated/prisma/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { error } from 'console';
 
 export const HomePage = () => {
     const { data, isLoading, error, refetch } = useQuery({

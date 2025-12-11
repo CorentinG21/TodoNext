@@ -8,6 +8,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Todo } from '@/generated/prisma/client';
 import { ComponentProps } from 'react';
+import dayjs from 'dayjs';
+
+import 'dayjs/locale/fr';
+
+dayjs.locale('fr');
 
 export type TodoItemProps = {
     todo: Todo;
@@ -15,6 +20,7 @@ export type TodoItemProps = {
 } & Omit<ComponentProps<typeof Item>, 'onToggle'>;
 
 export const TodoItem = ({ todo, onToggle, ...rest }: TodoItemProps) => {
+    const datecreate = dayjs(todo.createdAt).format('DD/MM/YYYY');
     return (
         <Item
             {...rest}
@@ -31,15 +37,21 @@ export const TodoItem = ({ todo, onToggle, ...rest }: TodoItemProps) => {
             </ItemActions>
 
             <ItemContent className="items-center flex-row">
-                <ItemTitle
-                    className={`mr-auto text-lg font-medium ${
-                        todo.status === 'CHECKED'
-                            ? 'line-through text-gray-400'
-                            : 'text-gray-700'
-                    }`}
-                >
-                    {todo.label}
-                </ItemTitle>
+                <div className="mr-auto">
+                    <ItemTitle
+                        className={`text-lg font-medium ${
+                            todo.status === 'CHECKED'
+                                ? 'line-through text-gray-400'
+                                : 'text-gray-700'
+                        }`}
+                    >
+                        {todo.label}
+                    </ItemTitle>
+
+                    <p className="text-xs text-gray-600 mt-1">
+                        Créé le {datecreate}
+                    </p>
+                </div>
 
                 <Badge
                     variant={
