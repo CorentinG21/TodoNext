@@ -1,3 +1,5 @@
+'use client';
+
 import { useForm, Controller } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -18,7 +20,7 @@ import {
     PopoverContent,
 } from '@/components/ui/popover';
 import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, Calendar as CalendarIcon } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
 
 type CreateTodoFormValues = {
@@ -44,15 +46,19 @@ export const CreateTodoForm = () => {
         },
         onSuccess: (_data, _vars, _onMutate, ctx) => {
             ctx.client.invalidateQueries({ queryKey: ['todos'] });
+            toast('Tâche créée !', {
+                description: (
+                    <p className="text-green-600">
+                        Votre nouvelle tâche a été ajoutée.
+                    </p>
+                ),
+                duration: 2000,
+            });
         },
         onError: (error) => {
             toast('Ça marche pas', {
                 description: <p className="text-red-600">{error.message}</p>,
-                duration: Infinity,
-                action: {
-                    label: 'Réduire',
-                    onClick: () => console.log(''),
-                },
+                duration: 3000,
             });
         },
     });
@@ -79,89 +85,136 @@ export const CreateTodoForm = () => {
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex gap-4 mb-6 justify-center"
+            className="flex flex-col sm:flex-row gap-4 mb-6 p-4 bg-gradient-to-r from-gray-50/80 to-white rounded-lg shadow-sm border border-gray-200"
         >
-            <Field>
-                <Input
-                    type="text"
-                    className="w-full"
-                    {...register('label', {
-                        minLength: {
-                            value: 3,
-                            message:
-                                'Votre message doit faire plus de 3 caractères',
-                        },
-                    })}
-                />
-                {errors.label && (
-                    <p className="text-red-600">{errors.label.message}</p>
-                )}
-            </Field>
+            <div className="flex-1">
+                <Field>
+                    <Input
+                        type="text"
+                        placeholder="Ajouter une nouvelle tâche..."
+                        className="w-full border-gray-300 focus:border-green-500 transition-colors"
+                        {...register('label', {
+                            required: 'Ce champ est requis',
+                            minLength: {
+                                value: 3,
+                                message: 'Minimum 3 caractères',
+                            },
+                        })}
+                    />
+                    {errors.label && (
+                        <p className="text-red-600 text-sm mt-1">
+                            {errors.label.message}
+                        </p>
+                    )}
+                </Field>
+            </div>
 
-            <Controller
-                name="priority"
-                control={control}
-                render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
-                        <SelectTrigger className="w-[150px]">
-                            <SelectValue placeholder="Priorité" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="LOW">Basse</SelectItem>
-                            <SelectItem value="MEDIUM">Moyenne</SelectItem>
-                            <SelectItem value="HIGH">Haute</SelectItem>
-                        </SelectContent>
-                    </Select>
-                )}
-            />
+            <div className="flex flex-wrap sm:flex-nowrap gap-3 items-start">
+                <div className="w-[140px]">
+                    <Controller
+                        name="priority"
+                        control={control}
+                        render={({ field }) => (
+                            <Select
+                                onValueChange={field.onChange}
+                                value={field.value}
+                            >
+                                <SelectTrigger className="w-full border-gray-300 hover:border-gray-400 transition-colors">
+                                    <SelectValue placeholder="Priorité" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem
+                                        value="LOW"
+                                        className="text-green-600"
+                                    >
+                                        Basse
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="MEDIUM"
+                                        className="text-amber-600"
+                                    >
+                                        Moyenne
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="HIGH"
+                                        className="text-red-600"
+                                    >
+                                        Haute
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                        )}
+                    />
+                </div>
 
-            <Controller
-                name="deadline"
-                control={control}
-                render={({ field }) => {
-                    const date = field.value
-                        ? new Date(field.value)
-                        : undefined;
-                    return (
-                        <Popover open={open} onOpenChange={setOpen}>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    className="w-40 justify-between border-gray-200"
-                                >
-                                    {date
-                                        ? date.toLocaleDateString()
-                                        : 'Deadline'}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="p-0">
-                                <Calendar
-                                    mode="single"
-                                    selected={date}
-                                    onSelect={(date) => {
-                                        field.onChange(date?.toISOString());
-                                        setOpen(false);
-                                    }}
-                                />
-                            </PopoverContent>
-                        </Popover>
-                    );
-                }}
-            />
+                <div className="w-[160px]">
+                    <Controller
+                        name="deadline"
+                        control={control}
+                        render={({ field }) => {
+                            const date = field.value
+                                ? new Date(field.value)
+                                : undefined;
+                            return (
+                                <Popover open={open} onOpenChange={setOpen}>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            className="w-full justify-between border-gray-300 hover:border-gray-400 transition-colors"
+                                        >
+                                            {date ? (
+                                                <span className="font-medium">
+                                                    {date.toLocaleDateString(
+                                                        'fr-FR',
+                                                        {
+                                                            day: 'numeric',
+                                                            month: 'short',
+                                                        }
+                                                    )}
+                                                </span>
+                                            ) : (
+                                                <span className="flex items-center gap-2">
+                                                    <CalendarIcon className="size-4 text-gray-500" />
+                                                    <span>Deadline</span>
+                                                </span>
+                                            )}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
+                                    >
+                                        <Calendar
+                                            mode="single"
+                                            selected={date}
+                                            onSelect={(date) => {
+                                                field.onChange(
+                                                    date?.toISOString()
+                                                );
+                                                setOpen(false);
+                                            }}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                            );
+                        }}
+                    />
+                </div>
 
-            <Button
-                type="submit"
-                variant="outline"
-                size="icon"
-                className="border-transparent"
-                disabled={createMutation.isPending}
-            >
-                {createMutation.isPending ? (
-                    <Spinner />
-                ) : (
-                    <Plus className="size-5 text-green-600" />
-                )}
-            </Button>
+                <Button
+                    type="submit"
+                    size="icon"
+                    className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-sm hover:shadow transition-all"
+                    disabled={createMutation.isPending}
+                >
+                    {createMutation.isPending ? (
+                        <Spinner className="size-5" />
+                    ) : (
+                        <Plus className="size-5" />
+                    )}
+                </Button>
+            </div>
         </form>
     );
 };

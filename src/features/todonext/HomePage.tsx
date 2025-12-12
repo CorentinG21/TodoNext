@@ -51,7 +51,12 @@ export const HomePage = () => {
         try {
             await authClient.signOut();
             toast('Déconnecté', {
-                description: 'Vous avez été déconnecté avec succès.',
+                description: (
+                    <p className="text-green-600">
+                        {' '}
+                        Vous avez été déconnecté avec succès.
+                    </p>
+                ),
                 duration: 2000,
             });
             router.push('/sign-in');
