@@ -1,9 +1,17 @@
 import { prisma } from '@/lib/prisma';
 import { NextRequest } from 'next/server';
+import { auth } from '@/lib/auth';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+    const session = await auth.api.getSession({ headers: request.headers });
+
+    if (!session) {
+        return new Response('Pas Autorisé', { status: 401 });
+    }
+
     const todos = await prisma.todo.findMany({
         where: {
+            userId: session.user.id,
             isDeleted: false,
         },
         orderBy: [{ status: 'desc' }, { createdAt: 'asc' }],
@@ -12,8 +20,13 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-    const body = await req.json();
+    const session = await auth.api.getSession({ headers: req.headers });
 
+    if (!session) {
+        return new Response('Pas Autorisé', { status: 401 });
+    }
+
+    const body = await req.json();
     const { label, priority, deadline } = body;
 
     if (!label.trim()) {
@@ -33,6 +46,7 @@ export async function POST(req: NextRequest) {
             label,
             priority: priority || 'LOW',
             deadline: deadlineIso,
+            userId: session.user.id,
         },
     });
     return Response.json({ data: todo });
