@@ -13,6 +13,8 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/fr';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
+import { useMutation } from '@tanstack/react-query';
+import { Spinner } from '@/components/ui/spinner';
 
 dayjs.locale('fr');
 
@@ -26,6 +28,19 @@ export const TodoItem = ({ todo, onToggle, ...rest }: TodoItemProps) => {
     const deadline = todo.deadline ? dayjs(todo.deadline) : null;
     const deadlineText = deadline ? deadline.format('DD/MM/YYYY') : null;
     const datedepasse = deadline ? dayjs().isAfter(deadline) : false;
+
+    const deleteMutation = useMutation({
+        mutationFn: async () => {
+            const res = await fetch(`/api/todo/${todo.id}`, {
+                method: 'DELETE',
+            });
+            if (!res.ok) throw new Error('Erreur de suppression');
+            return res.json();
+        },
+        onSuccess: (_data, _vars, _onMutate, ctx) => {
+            ctx.client.invalidateQueries({ queryKey: ['todos'] });
+        },
+    });
 
     return (
         <Item
@@ -97,8 +112,16 @@ export const TodoItem = ({ todo, onToggle, ...rest }: TodoItemProps) => {
                           ? 'Moyenne'
                           : 'Basse'}
                 </Badge>
-                <Button className="bg-transparent hover:bg-red-200 transition-colors">
-                    <Trash2 className="text-red-600 hover:text-red-700" />
+                <Button
+                    onClick={() => deleteMutation.mutate()}
+                    className="bg-transparent hover:bg-red-200 transition-colors"
+                    disabled={deleteMutation.isPending}
+                >
+                    {deleteMutation.isPending ? (
+                        <Spinner />
+                    ) : (
+                        <Trash2 className="text-red-600 hover:text-red-700" />
+                    )}
                 </Button>
             </ItemContent>
         </Item>
