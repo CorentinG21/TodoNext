@@ -13,6 +13,8 @@ import { authClient } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 
 export const HomePage = () => {
+    const { data: session, isPending } = authClient.useSession();
+
     const { data, isLoading, error, refetch } = useQuery({
         queryKey: ['todos'],
         queryFn: async () => {
@@ -59,6 +61,7 @@ export const HomePage = () => {
     };
 
     const todos = data?.data || [];
+    const user = session?.user;
 
     const nbNotChecked = todos.filter(
         (todo) => todo.status === 'NOT_CHECKED'
@@ -72,6 +75,13 @@ export const HomePage = () => {
                         <h1 className="text-4xl md:text-5xl font-bold text-gray-800">
                             TodoLIST
                         </h1>
+                        {user && (
+                            <p className="text-gray-700 font-medium">
+                                Bonjour,{' '}
+                                <span className="font-bold">{user.name}</span>
+                            </p>
+                        )}
+
                         <Button
                             size="icon"
                             className="bg-transparent hover:bg-red-300"
@@ -120,7 +130,7 @@ export const HomePage = () => {
 
                 <div className="mt-8 text-center">
                     <Link
-                        href="/archive"
+                        href="/app/archive"
                         className="inline-block px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition"
                     >
                         Voir les archives

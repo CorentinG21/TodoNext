@@ -26,7 +26,7 @@ export const PageSignIn = () => {
             {
                 onRequest: () => setLoading(true),
                 onSuccess: () => {
-                    toast('Connexio réussie', {
+                    toast('Connexion réussie', {
                         description: (
                             <p className="text-green-600">
                                 Vous êtes connecté !
