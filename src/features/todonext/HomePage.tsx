@@ -13,7 +13,7 @@ import { authClient } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 
 export const HomePage = () => {
-    const { data: session, isPending } = authClient.useSession();
+    const { data: session } = authClient.useSession();
 
     const { data, isLoading, error, refetch } = useQuery({
         queryKey: ['todos'],
