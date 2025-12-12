@@ -5,6 +5,7 @@ import { TodoItem } from '@/features/todonext/TodoItem';
 import { Todo } from '@/generated/prisma/client';
 import { CreateTodoForm } from './CreateTodoForm';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
 
 export const HomePage = () => {
     const { data, isLoading, error, refetch } = useQuery({
@@ -86,6 +87,15 @@ export const HomePage = () => {
                         </div>
                     </>
                 )}
+
+                <div className="mt-8 text-center">
+                    <Link
+                        href="/archive"
+                        className="inline-block px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition"
+                    >
+                        Voir les archives
+                    </Link>
+                </div>
             </div>
         </div>
     );

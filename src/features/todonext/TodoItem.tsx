@@ -113,6 +113,8 @@ export const TodoItem = ({ todo, onToggle, ...rest }: TodoItemProps) => {
                           : 'Basse'}
                 </Badge>
                 <Button
+                    size="icon"
+                    variant="ghost"
                     onClick={() => deleteMutation.mutate()}
                     className="bg-transparent hover:bg-red-200 transition-colors"
                     disabled={deleteMutation.isPending}
