@@ -8,15 +8,13 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Todo } from '@/generated/prisma/client';
 import { ComponentProps } from 'react';
-import dayjs from 'dayjs';
 
-import 'dayjs/locale/fr';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import { Spinner } from '@/components/ui/spinner';
 
-dayjs.locale('fr');
+import dayjs from 'dayjs';
 
 export type TodoItemProps = {
     todo: Todo;
