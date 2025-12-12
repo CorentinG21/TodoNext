@@ -110,19 +110,21 @@ export const TodoItem = ({ todo, onToggle, ...rest }: TodoItemProps) => {
                           ? 'Moyenne'
                           : 'Basse'}
                 </Badge>
-                <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => deleteMutation.mutate()}
-                    className="bg-transparent hover:bg-red-200 transition-colors"
-                    disabled={deleteMutation.isPending}
-                >
-                    {deleteMutation.isPending ? (
-                        <Spinner />
-                    ) : (
-                        <Trash2 className="text-red-600 hover:text-red-700" />
-                    )}
-                </Button>
+                {!todo.isDeleted && (
+                    <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => deleteMutation.mutate()}
+                        className="bg-transparent hover:bg-red-200 transition-colors"
+                        disabled={deleteMutation.isPending}
+                    >
+                        {deleteMutation.isPending ? (
+                            <Spinner />
+                        ) : (
+                            <Trash2 className="text-red-600 hover:text-red-700" />
+                        )}
+                    </Button>
+                )}
             </ItemContent>
         </Item>
     );
